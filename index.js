@@ -1,8 +1,5 @@
 import * as d3 from "https://unpkg.com/d3?module";
 
-const date = new Date("2022-01-03");
-console.log(date);
-
 const url =
   "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json";
 
@@ -116,7 +113,6 @@ fetch(url)
       .data(dataset)
       .enter()
       .append("rect")
-      // .attr("x", (d, i) => padding + i * barwidth)
       .attr("x", (d, i) => xScale(new Date(d[0])))
       .attr("y", (d, i) => yScale(d[1]))
       .attr("width", barwidth)
