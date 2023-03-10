@@ -4,7 +4,7 @@ d3 bar-chart-visualization -- solo project from freeCodeCamp data visualization-
 This repo contains the first data-visualization from fCC data-visualization-course.
 It is a simple bar-chart built on my own from scratch using d3 according to user stories (see below). 
 
-Live demo available: *coming soon*
+Live demo available: https://sparkly-fudge-290312.netlify.app
 
 
 Note: There is a testscript from freeCodeCamp included confirming fullfilling of user stories.
