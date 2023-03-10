@@ -14,45 +14,23 @@ fetch(url)
     return res.json();
   })
   .then((data) => {
-    // console.log(data);
     const dataset = data.data;
-    // console.log(dataset);
 
-    const w = 700;
+    // compute windwoWidth
+    let windowWidth = document.querySelector("body").clientWidth;
+    let windowHeight = document.querySelector("body").clientHeight;
+    window.addEventListener("resize", () => {
+      windowWidth = document.querySelector("body").clientWidth;
+      windowHeight = document.querySelector("body").clientHeight;
+    });
+
+    // layout variables
+    const w = 1000;
     const h = 700;
     const padding = 50;
     const barwidth = (w - 2 * padding) / dataset.length;
 
-    // const xScale = d3
-    //   .scaleLinear()
-    //   .domain([d3.min(dataset, (d, i) => i), d3.max(dataset, (d, i) => i)])
-    //   .range([padding, w - padding]);
-
-    const xScale = d3
-      .scaleTime()
-      .domain([
-        d3.min(dataset, (d, i) => {
-          return new Date(d[0]);
-        }),
-        d3.max(dataset, (d, i) => {
-          return new Date(d[0]);
-        }),
-      ])
-      .range([padding, w - padding]);
-
-    const xAxis = d3.axisBottom(xScale);
-
-    // var y = d3.scale.linear()
-    // .range([height, 0])
-    // .domain([0, d3.max(data, function(d) { return d[1]; })]);
-
-    const yScale = d3
-      .scaleLinear()
-      .domain([0, d3.max(dataset, (d) => d[1])])
-      .range([h - padding, padding]);
-
-    const yAxis = d3.axisLeft(yScale);
-
+    //svg container
     const svg = d3
       .select("body")
       .append("svg")
@@ -68,6 +46,28 @@ fetch(url)
       .attr("id", "title")
       .text("United States GDP");
 
+    // scales
+    const xScale = d3
+      .scaleTime()
+      .domain([
+        d3.min(dataset, (d, i) => {
+          return new Date(d[0]);
+        }),
+        d3.max(dataset, (d, i) => {
+          return new Date(d[0]);
+        }),
+      ])
+      .range([padding, w - padding]);
+
+    const yScale = d3
+      .scaleLinear()
+      .domain([0, d3.max(dataset, (d) => d[1])])
+      .range([h - padding, padding]);
+
+    // axis
+    const xAxis = d3.axisBottom(xScale);
+    const yAxis = d3.axisLeft(yScale);
+
     svg
       .append("g")
       .attr("transform", `translate(0, ${h - padding})`)
@@ -80,9 +80,10 @@ fetch(url)
       .attr("id", "y-axis")
       .call(yAxis);
 
+    // tooltip
     const tooltip = d3
       .select("body")
-      .append("div")
+      .append("g")
       .attr("id", "tooltip")
       .style("opacity", 0);
 
@@ -103,18 +104,20 @@ fetch(url)
 
       tooltip.transition().duration(200).style("opacity", 0.9);
       tooltip
-        .html(`<p> ${year} Q${quarter}<p><h2>${gdp}</h2>`)
+        .html(`<p>${year} Q${quarter}</p><h2>${gdp}</h2>`)
         .attr("data-date", d[0])
-        .style("left", a + "px")
-        .style("top", b + "px");
+        .style("left", (windowWidth - w) / 2 + a + 20 + "px")
+        .style("top", (windowHeight - h) / 2 + b - 100 + "px");
     };
 
+    // bars
     svg
       .selectAll("rect")
       .data(dataset)
       .enter()
       .append("rect")
-      .attr("x", (d, i) => padding + i * barwidth)
+      // .attr("x", (d, i) => padding + i * barwidth)
+      .attr("x", (d, i) => xScale(new Date(d[0])))
       .attr("y", (d, i) => yScale(d[1]))
       .attr("width", barwidth)
       .attr("height", (d, i) => h - padding - yScale(d[1]))
@@ -125,10 +128,6 @@ fetch(url)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave)
       .on("mouseenter", mouseenter);
-    // .append("title")
-    // .text((d) => {
-    //   return d[0].slice(0, 4);
-    // });
   })
   .catch((error) =>
     console.log("Not able to fetch the data. There was an error: ", error)

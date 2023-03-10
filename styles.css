@@ -14,11 +14,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
 #container {
     background-color: #f5f3f4;
     margin: 0 0.5em;
+    box-shadow: 0 0 0.5em whitesmoke;
+    position: relative;
 }
 
 #title {
@@ -26,29 +29,16 @@ body {
     font-weight: bold;
 }
 
-.bar {
-
-}
-
 .bar:hover{
     fill: #161a1d;
 }
 
 #tooltip {
-    width: 50px;
-    height: 50px;
     position: absolute;
     pointer-events: none;
-    background: #000;
-    color: #fff;
-    position: absolute;			
-    text-align: center;			
-    width: 60px;					
-    height: 28px;					
-    padding: 2px;				
-    font: 12px sans-serif;		
-    background: lightsteelblue;	
-    border: 0px;		
-    border-radius: 8px;			
-    pointer-events: none;	
+    background: #e5383b;
+    color: #fff;	
+    text-align: center;						
+    padding: 0.5em;
+    box-shadow: 0 0 0.5em black					
 }
